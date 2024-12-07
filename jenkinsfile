@@ -30,7 +30,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sshagent(['my_ssh_key']) {
+                sshagent(['my-ssh-key']) {
                     sh '''
                     ansible-playbook -i deploy.yml \
                         -e image_name=sug2004/cw2-server:1.0 \
