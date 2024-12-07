@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_CREDS = credentials('Docker')  // Make sure the correct credentials ID is here
+        DOCKER_HUB_CREDS = credentials('Docker')  // Ensure this is the correct credentials ID
     }
     stages {
         stage('Docker Image Build') {
@@ -12,10 +12,10 @@ pipeline {
         stage('Test Docker Image') {
             steps {
                 sh 'docker image inspect sug2004/cw2-server:1.0'
-                sh 'docker run --name tes-container -d -p 8087:8080 sug2004/cw2-server:1.0'
-                sh 'curl http://localhost:8080'  // To test the service is running
-                sh 'docker stop tes-container'
-                sh 'docker rm tes-container'
+                sh 'docker run --name test-container -d -p 8087:8080 sug2004/cw2-server:1.0'
+                sh 'curl -f http://localhost:8080' // Fails pipeline if curl doesn't succeed
+                sh 'docker stop test-container'
+                sh 'docker rm test-container'
             }
         }
         stage('DockerHub Login') {
@@ -31,15 +31,20 @@ pipeline {
         stage('Deploy') {
             steps {
                 sshagent(['my-ssh-key']) {
-                    sh ''''
-		    sudo apt update && sudo apt install ansible -y
+                    sh '''
+                    # Ensure Ansible is installed and available
+                    if ! command -v ansible-playbook &> /dev/null; then
+                        sudo apt update
+                        sudo apt install -y ansible
+                    fi
+                    
+                    # Run the Ansible playbook
                     ansible-playbook -i deploy.yml \
                         -e image_name=sug2004/cw2-server:1.0 \
                         -e replicas=3
-                    ''''
+                    '''
                 }
             }
         }
     }
 }
-
