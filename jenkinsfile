@@ -32,13 +32,15 @@ pipeline {
             steps {
                 sshagent(['my-ssh-key']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@3.85.134.120 << EOF
+                    ssh -o StrictHostKeyChecking=no ubuntu@3.85.134.120
                     
                     ansible-playbook deploy.yml \
                         -e image_name=sug2004/cw2-server:1.0 \
                         -e replicas=3
-                    EOF
-                    '''
+                    
+		    ansible-playbook scaledeploy.yml \
+			-e replicas=3
+                     '''
                 }
             }
         }
