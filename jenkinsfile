@@ -40,7 +40,7 @@ pipeline {
                     
 		    ansible-playbook scaledeploy.yml \
 			-e replicas=3
-		     EOF
+		    
                      '''
                 }
             }
