@@ -12,7 +12,7 @@ pipeline {
         stage('Test Docker Image') {
             steps {
                 sh 'docker image inspect sug2004/cw2-server:1.0'
-                sh 'docker run --name e-container -d -p 8088:8080 sug2004/cw2-server:1.0'
+                sh 'docker run --name e-container -d -p 8080:8080 sug2004/cw2-server:1.0'
                 sh 'curl http://localhost:8088'  // Ensure the service is running
                 sh 'docker stop e-container'
                 sh 'docker rm e-container'
@@ -32,7 +32,7 @@ pipeline {
             steps {
                 sshagent(['my-ssh-key']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@3.85.134.120 <<EOF
+                    ssh -o StrictHostKeyChecking=no ubuntu@34.201.119.174 <<EOF
                     
                     ansible-playbook deploy.yml \
                         -e image_name=sug2004/cw2-server:1.0 \
