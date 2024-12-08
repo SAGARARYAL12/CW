@@ -12,10 +12,10 @@ pipeline {
         stage('Test Docker Image') {
             steps {
                 sh 'docker image inspect sug2004/cw2-server:1.0'
-                sh 'docker run --name e-container -d -p 8080:8080 sug2004/cw2-server:1.0'
+                sh 'docker run --name er-container -d -p 8088:8080 sug2004/cw2-server:1.0'
                 sh 'curl http://localhost:8088'  // Ensure the service is running
-                sh 'docker stop e-container'
-                sh 'docker rm e-container'
+                sh 'docker stop er-container'
+                sh 'docker rm er-container'
             }
         }
         stage('DockerHub Login') {
