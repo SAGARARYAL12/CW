@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_CREDS = credentials('Docker')  // Make sure the correct credentials ID is here
+        DOCKER_HUB_CREDS = credentials('Docker')
     }
     stages {
         stage('Docker Image Build') {
@@ -13,7 +13,7 @@ pipeline {
             steps {
                 sh 'docker image inspect sug2004/cw2-server:1.0'
                 sh 'docker run --name b-container -d -p 8089:8080 sug2004/cw2-server:1.0'
-                sh 'curl http://localhost:8080'  // Ensure the service is running
+                sh 'curl http://localhost:8080'
                 sh 'docker stop b-container'
                 sh 'docker rm b-container'
             }
@@ -38,7 +38,7 @@ pipeline {
                         -e image_name=sug2004/cw2-server:1.0 \
                         -e replicas=3
                     
-		    ansible-playbook scaledeploy.yml \
+		    ansible-playbook scaledeploys.yml \
 			-e replicas=3
 		    
                      '''
